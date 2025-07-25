@@ -5,6 +5,9 @@
   "scripts": {
     "start": "node index.js"
   },
+  "env": {
+  "PORT": "8080"
+},
   "dependencies": {
     "express": "^4.18.2",
     "mysql2": "^3.9.6",
