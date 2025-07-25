@@ -53,6 +53,10 @@ connection.connect((err) => {
   }
 });
 
+console.log('🌐 Trying to connect to MySQL at:', {
+  host: process.env.MYSQL_HOST,
+  port: process.env.MYSQL_PORT
+});
 
 app.get('/', (req, res) => {
   res.send('✅ Server is alive');
