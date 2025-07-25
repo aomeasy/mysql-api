@@ -39,3 +39,12 @@ console.log({
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DB,
 });
+
+connection.connect((err) => {
+  if (err) {
+    console.error('❌ Failed to connect to MySQL:', err.message);
+    process.exit(1); // หยุด process เพื่อให้ logs แจ้งชัด
+  } else {
+    console.log('✅ Connected to MySQL');
+  }
+});
