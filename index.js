@@ -52,3 +52,8 @@ connection.connect((err) => {
     console.log('✅ Connected to MySQL');
   }
 });
+
+
+app.get('/', (req, res) => {
+  res.send('✅ Server is alive');
+});
