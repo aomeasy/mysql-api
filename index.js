@@ -27,6 +27,10 @@ app.post('/save', (req, res) => {
   });
 });
 
+app.get('/', (req, res) => {
+  res.send('✅ Server is alive');
+});
+
 app.listen(port, () => {
   console.log(`🚀 API running at http://localhost:${port}`);
 });
