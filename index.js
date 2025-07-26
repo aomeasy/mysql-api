@@ -23,10 +23,7 @@ connection.connect((err) => {
   }
 });
 
-// ✅ ให้แน่ใจว่ามีเพียงอันเดียวเท่านั้น
-app.get('/', (req, res) => {
-  res.send('✅ Server is alive');
-});
+
 
 app.post('/save', (req, res) => {
   const { name, email } = req.body;
@@ -44,4 +41,9 @@ app.listen(port, () => {
 });
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
+});
+
+// ✅ ให้แน่ใจว่ามีเพียงอันเดียวเท่านั้น
+app.get('/', (req, res) => {
+  res.send('✅ Server is alive');
 });
