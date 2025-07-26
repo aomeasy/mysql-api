@@ -3,6 +3,8 @@ const express = require('express');
 const mysql = require('mysql2');
 const app = express();
 const port = process.env.PORT;
+const sql = 'INSERT INTO Aom (name, email) VALUES (?, ?)';
+
 console.log("🌍 ENV loaded:", {
   host: process.env.MYSQL_HOST,
   port: process.env.MYSQL_PORT,
