@@ -3,6 +3,14 @@ const express = require('express');
 const mysql = require('mysql2');
 const app = express();
 const port = process.env.PORT;
+console.log("🌍 ENV loaded:", {
+  host: process.env.MYSQL_HOST,
+  port: process.env.MYSQL_PORT,
+  user: process.env.MYSQL_USER,
+  pass: process.env.MYSQL_PASSWORD,
+  db: process.env.MYSQL_DB,
+  portApp: process.env.PORT
+});
 
 app.use(express.json());
 
