@@ -42,3 +42,6 @@ app.post('/save', (req, res) => {
 app.listen(port, () => {
   console.log(`🚀 API running at http://localhost:${port}`);
 });
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
