@@ -13,7 +13,7 @@ console.log("🌍 ENV loaded:", {
   portApp: process.env.PORT
 });
 
-app.use(express.json());
+app.use(express.json()); // ✅ สำคัญ: ต้องมาก่อน route ทั้งหมด
 
 const connection = mysql.createConnection({
   host: process.env.MYSQL_HOST,
@@ -32,17 +32,32 @@ connection.connect((err) => {
   }
 });
 
-// 🔁 POST: รับข้อมูลจาก Google Apps Script (batch)
+// ✅ Route สำหรับเช็คสถานะ
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
+// ✅ Route root
+app.get('/', (req, res) => {
+  res.send('✅ Server is alive');
+});
+
+// ✅ Route /saveBatch
 app.post('/saveBatch', (req, res) => {
   const records = req.body.data;
-  if (!Array.isArray(records)) return res.status(400).send('Invalid data');
+  if (!Array.isArray(records) || records.length === 0) {
+    return res.status(400).json({ success: false, error: 'Invalid data' });
+  }
 
   const keys = Object.keys(records[0]);
   const placeholders = keys.map(() => '?').join(', ');
   const sql = `INSERT INTO datacomNT (${keys.join(',')}) VALUES (${placeholders})`;
 
   connection.beginTransaction(err => {
-    if (err) return res.status(500).send('DB error (transaction)');
+    if (err) {
+      console.error('❌ Transaction Error:', err.message);
+      return res.status(500).json({ success: false, error: 'DB transaction error' });
+    }
 
     const tasks = records.map(record => {
       const values = keys.map(k => record[k]);
@@ -57,27 +72,16 @@ app.post('/saveBatch', (req, res) => {
     Promise.all(tasks)
       .then(() => {
         connection.commit();
-        res.send({ success: true, inserted: records.length });
+        res.status(200).json({ success: true, inserted: records.length });
       })
       .catch(e => {
         connection.rollback();
         console.error('❌ Batch insert error:', e.message);
-        res.status(500).send('Batch insert failed');
+        res.status(500).json({ success: false, error: 'Batch insert failed', detail: e.message });
       });
   });
 });
 
-// 🔍 GET: ตรวจสุขภาพ API
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
-});
-
-// 🏠 GET: หน้าหลัก
-app.get('/', (req, res) => {
-  res.send('✅ Server is alive');
-});
-
-// 🚀 Start Server
 app.listen(port, () => {
   console.log(`🚀 API running at http://localhost:${port}`);
 });
