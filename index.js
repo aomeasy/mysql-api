@@ -49,9 +49,12 @@ app.post('/saveBatch', (req, res) => {
     return res.status(400).json({ success: false, error: 'Invalid data' });
   }
 
+ 
   const keys = Object.keys(records[0]);
-  const placeholders = keys.map(() => '?').join(', ');
-  const sql = `INSERT INTO datacomNT (${keys.join(',')}) VALUES (${placeholders})`;
+const columns = keys.map(k => `\`${k}\``).join(', ');         // ✅ ใส่ backtick ครอบ
+const placeholders = keys.map(() => '?').join(', ');
+const sql = `INSERT INTO datacomNT (${columns}) VALUES (${placeholders})`;
+
 
   connection.beginTransaction(err => {
     if (err) {
